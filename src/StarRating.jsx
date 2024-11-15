@@ -1,4 +1,4 @@
-import { useState } from "react";
+/* import { useState } from "react";
 import Starrate from "./mychallenge";
 
 const container = {
@@ -70,7 +70,7 @@ function Star({ onRating, full, onHoverIn, onHoverOut }) {
       )}
     </span>
   );
-}
+} */
 
 /*
 SPACING SYSTEM (px)
@@ -112,7 +112,7 @@ EMPTY STAR
 </svg>
 
 */
-export default function Test() {
+/* export default function Test() {
   const [rate, setRate] = useState(0);
   function onchange(i) {
     setRate(i);
@@ -124,3 +124,4 @@ export default function Test() {
     </div>
   );
 }
+ */

@@ -8,6 +8,7 @@ const container = {
 function Star({ maxRating, size, color = "#ffd700" }) {
   const [rating, setRating] = useState(maxRating);
   const [tempRating, setTempRating] = useState(0);
+
   function handleRating(rating) {
     setRating(rating);
   }

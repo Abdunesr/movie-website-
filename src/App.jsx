@@ -1,10 +1,9 @@
-import Star from "./Star";
+import Index from "./MMM";
 
 function App() {
   return (
     <div>
-      <Star maxRating={8} size={32} color={"red"} />
-      <Star maxRating={2} size={65} color={"blue"} />
+      <Index />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const tempMovieData = [
   {
@@ -55,9 +55,18 @@ export default function Index() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
 
-  fetch(`http://www.omdbapi.com/?apikey=${key}&s=interstellar`)
-    .then((res) => res.json())
-    .then((data) => setMovies(data.Search));
+  useEffect(function () {
+    async function FetchMovie() {
+      const res = await fetch(`http://www.omdbapi.com/?apikey=${key}&s=game`);
+      const data = await res.json();
+      setMovies(data.Search);
+      /* altenative;
+      fetch(`http://www.omdbapi.com/?apikey=${key}&s=game`).then(res=>res.json()).then(data=>setMovies(data.Search))
+ */
+    }
+    FetchMovie();
+  }, []);
+
   return (
     <>
       <NavBar>

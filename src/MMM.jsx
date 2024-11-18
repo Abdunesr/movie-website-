@@ -55,31 +55,58 @@ export default function Index() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState(tempWatchedData);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("game");
+  useEffect(
+    function () {
+      setIsLoading(true);
+      async function FetchMovie() {
+        try {
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${key}&s=${query}`
+          );
+          if (!res.ok)
+            throw new Error("Error occured when the fetching is done");
 
-  useEffect(function () {
-    setIsLoading(true);
-    async function FetchMovie() {
-      const res = await fetch(`http://www.omdbapi.com/?apikey=${key}&s=game`);
-      const data = await res.json();
+          const data = await res.json();
+          if (data.Response === "False") throw new Error("Movie not found");
 
-      setMovies(data.Search);
-      setIsLoading(false);
-      /* altenative;
+          setMovies(data.Search);
+
+          /* altenative;
       fetch(`http://www.omdbapi.com/?apikey=${key}&s=game`).then(res=>res.json()).then(data=>setMovies(data.Search))
  */
-    }
-    FetchMovie();
-  }, []);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      if (!query.length) {
+        setMovies([]);
+        setError("");
+        setIsLoading(false);
+        return;
+      }
+      FetchMovie();
+    },
+    [query]
+  );
 
   return (
     <>
       <NavBar>
-        <SearchBar />
+        <SearchBar query={query} setQuery={setQuery} />
         <NumofResult movies={movies} />
       </NavBar>
 
       <Main>
-        <Box>{isLoading ? <Loading /> : <MovieList movies={movies} />}</Box>
+        <Box>
+          {isLoading && <Loading />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <Error message={error} />}
+        </Box>
+
         <Box>
           <WatchedSummary watched={watched} />
           <WatchedMovieList watched={watched} />
@@ -88,7 +115,14 @@ export default function Index() {
     </>
   );
 }
-
+function Error({ message }) {
+  return (
+    <h2 style={{ display: "flex", justifyContent: "center" }}>
+      <span>er⚠️</span>
+      {message}
+    </h2>
+  );
+}
 function Loading() {
   return <h2>isLoading ......</h2>;
 }
@@ -114,8 +148,7 @@ function Logo() {
   );
 }
 
-function SearchBar() {
-  const [query, setQuery] = useState("");
+function SearchBar({ query, setQuery }) {
   return (
     <input
       className="search"

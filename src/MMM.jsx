@@ -57,6 +57,13 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("game");
+  const [selectedId, setSelectedId] = useState("tt0944947");
+  function handleSelectedId(id) {
+    setSelectedId((selecetd) => (id === selecetd ? null : id));
+  }
+  function handleOncloseMovie() {
+    setSelectedId(null);
+  }
   useEffect(
     function () {
       setIsLoading(true);
@@ -70,6 +77,7 @@ export default function Index() {
 
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
+          console.log(data.Search);
 
           setMovies(data.Search);
 
@@ -103,13 +111,24 @@ export default function Index() {
       <Main>
         <Box>
           {isLoading && <Loading />}
-          {!isLoading && !error && <MovieList movies={movies} />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} handleSelectedId={handleSelectedId} />
+          )}
           {error && <Error message={error} />}
         </Box>
 
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
+          {selectedId ? (
+            <MovieDeatail
+              selectedId={selectedId}
+              handleOncloseMovie={handleOncloseMovie}
+            />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
@@ -118,7 +137,7 @@ export default function Index() {
 function Error({ message }) {
   return (
     <h2 style={{ display: "flex", justifyContent: "center" }}>
-      <span>er⚠️</span>
+      <span>error⚠️</span>
       {message}
     </h2>
   );
@@ -181,19 +200,23 @@ function Box({ children }) {
   );
 }
 
-function MovieList({ movies }) {
+function MovieList({ movies, handleSelectedId }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie
+          movie={movie}
+          key={movie.imdbID}
+          handleSelectedId={handleSelectedId}
+        />
       ))}
     </ul>
   );
 }
 
-function Movie({ movie }) {
+function Movie({ movie, handleSelectedId }) {
   return (
-    <li>
+    <li onClick={() => handleSelectedId(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -206,6 +229,16 @@ function Movie({ movie }) {
   );
 }
 
+function MovieDeatail({ selectedId, handleOncloseMovie }) {
+  return (
+    <div className="detail">
+      <button className="btn" onClick={handleOncloseMovie}>
+        &larr;
+      </button>
+      {selectedId}
+    </div>
+  );
+}
 function WatchedSummary({ watched }) {
   const avgImdbRating = average(watched.map((movie) => movie.imdbRating));
   const avgUserRating = average(watched.map((movie) => movie.userRating));

@@ -314,7 +314,7 @@ function MovieDeatail({ selectedId, handleOncloseMovie, AddWatchedMovie }) {
               <Star maxRating={10} size={24} onSetRating={setUserRating} />
               {userRating > 0 && (
                 <button className="btn-add" onClick={handleAddWatched}>
-                  Add to List
+                  Add to Lists
                 </button>
               )}
             </div>

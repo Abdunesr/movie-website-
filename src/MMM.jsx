@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Star from "./Star";
 
 const tempMovieData = [
   {
@@ -143,7 +144,18 @@ function Error({ message }) {
   );
 }
 function Loading() {
-  return <h2>isLoading ......</h2>;
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        textAlign: "center",
+        height: "100vh",
+      }}
+    >
+      <h1>isLoading ......</h1>
+    </div>
+  );
 }
 function NavBar({ children }) {
   return (
@@ -230,12 +242,62 @@ function Movie({ movie, handleSelectedId }) {
 }
 
 function MovieDeatail({ selectedId, handleOncloseMovie }) {
+  const [movie, setMovie] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(
+    function () {
+      setIsLoading(true);
+      async function FetchMovie() {
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${key}&i=${selectedId}`
+        );
+        const data = await res.json();
+        console.log(data);
+        setMovie(data);
+        setIsLoading(false);
+      }
+
+      FetchMovie();
+    },
+    [selectedId]
+  );
   return (
     <div className="detail">
-      <button className="btn" onClick={handleOncloseMovie}>
-        &larr;
-      </button>
-      {selectedId}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          {" "}
+          <header>
+            <button className="btn-back" onClick={handleOncloseMovie}>
+              &larr;
+            </button>{" "}
+            <img src={movie.Poster} alt={`${movie.Title}`} />
+            {selectedId}
+            <div className="deatails-overview">
+              <h2>{movie.Title}</h2>
+              <p>
+                {movie.Released} &bull; {movie.Runtime}
+              </p>
+              <p>{movie.Genre}</p>
+              <p>
+                <span>⭐</span>
+                {movie.imdbRating}
+              </p>
+            </div>
+          </header>
+          <section>
+            <div className="rating">
+              <Star maxRating={10} size={24} />
+            </div>
+            <h2>
+              <em>{movie.Plot}</em>
+            </h2>
+            <p>starting {movie.Actors}</p>
+            <p>Directed by {movie.Director} </p>
+          </section>
+        </>
+      )}
     </div>
   );
 }

@@ -64,6 +64,7 @@ export default function Index() {
     console.log(WatchedMove);
     setWatched((watched) => [...watched, WatchedMove]);
     console.log(watched);
+    setSelectedId(null);
   }
 
   function handleSelectedId(id) {

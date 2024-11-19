@@ -81,6 +81,7 @@ export default function Index() {
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${key}&s=${query}`
           );
+
           if (!res.ok)
             throw new Error("Error occured when the fetching is done");
 

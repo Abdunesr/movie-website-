@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const container = {
   display: "flex",
   gap: "16px",
   textAlign: "center",
 };
-function Star({ maxRating, size, color = "#ffd700" }) {
-  const [rating, setRating] = useState(3);
+function Star({ maxRating, size, color = "#ffd700", onSetRating }) {
+  const [rating, setRating] = useState(0);
   const [tempRating, setTempRating] = useState(0);
 
   function handleRating(rating) {
     setRating(rating);
+    onSetRating(rating);
   }
   return (
     <div style={container}>

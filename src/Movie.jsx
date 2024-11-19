@@ -254,6 +254,7 @@ function Movie({ movie, handleSelectedId }) {
 function MovieDeatail({ selectedId, handleOncloseMovie, AddWatchedMovie }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState();
   function handleAddWatched() {
     const watchedMovies = {
       imdbID: selectedId,
@@ -262,6 +263,7 @@ function MovieDeatail({ selectedId, handleOncloseMovie, AddWatchedMovie }) {
       poster: movie.Poster,
       imdbRating: Number(movie.imdbRating),
       runtime: movie.Runtime,
+      userRating: userRating,
     };
     AddWatchedMovie(watchedMovies);
   }
@@ -309,10 +311,12 @@ function MovieDeatail({ selectedId, handleOncloseMovie, AddWatchedMovie }) {
           </header>
           <section>
             <div className="rating">
-              <Star maxRating={10} size={24} />
-              <button className="btn-add" onClick={handleAddWatched}>
-                Add to List
-              </button>
+              <Star maxRating={10} size={24} onSetRating={setUserRating} />
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAddWatched}>
+                  Add to List
+                </button>
+              )}
             </div>
             <h2>
               <em>{movie.Plot}</em>

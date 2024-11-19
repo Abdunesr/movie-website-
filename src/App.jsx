@@ -1,4 +1,4 @@
-import Index from "./MMM";
+import Index from "./Movie";
 
 function App() {
   return (

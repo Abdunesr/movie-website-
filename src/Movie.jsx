@@ -74,7 +74,7 @@ export default function Index() {
     setSelectedId(null);
   }
   function handleDelete(id) {
-    setWatched((movie) => movie.filter(movie.imdbID !== id));
+    setWatched((movie) => watched.filter((movie) => movie.imdbID !== id));
   }
   useEffect(
     function () {

@@ -298,6 +298,16 @@ function MovieDeatail({
     },
     [selectedId]
   );
+  useEffect(
+    function () {
+      if (!movie.Title) return;
+      document.title = movie.Title;
+      return function () {
+        document.title = "Usepopcorn";
+      };
+    },
+    [movie.Title]
+  );
   return (
     <div className="detail">
       {isLoading ? (

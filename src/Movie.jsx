@@ -76,13 +76,25 @@ export default function Index() {
   function handleDelete(id) {
     setWatched((movie) => watched.filter((movie) => movie.imdbID !== id));
   }
+  useEffect(function () {
+    document.addEventListener("keydown", function (e) {
+      if (e.code === "Escape") {
+        handleOncloseMovie();
+        console.log("closing the movie screen");
+      }
+    });
+  }),
+    [];
   useEffect(
     function () {
-      setIsLoading(true);
+      const controller = new AbortController();
       async function FetchMovie() {
         try {
+          setIsLoading(true);
+          setError("");
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${key}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${key}&s=${query}`,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -98,7 +110,7 @@ export default function Index() {
       fetch(`http://www.omdbapi.com/?apikey=${key}&s=game`).then(res=>res.json()).then(data=>setMovies(data.Search))
  */
         } catch (err) {
-          setError(err.message);
+          if (err.name !== "AbortError") setError(err.message);
         } finally {
           setIsLoading(false);
         }
@@ -110,6 +122,9 @@ export default function Index() {
         return;
       }
       FetchMovie();
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );

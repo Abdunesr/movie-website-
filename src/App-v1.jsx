@@ -61,7 +61,7 @@ export default function Index() {
   const [selectedId, setSelectedId] = useState("tt0944947");
   /* const [watched, setWatched] = useState([]); */
   const [watched, setWatched] = useState(function () {
-    let store = localStorage.getItem("watched");
+    const store = localStorage.getItem("watched");
     return JSON.parse(store);
   });
 

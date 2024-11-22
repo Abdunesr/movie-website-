@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
 
 const tempMovieData = [
@@ -58,7 +58,7 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("game");
-  const [selectedId, setSelectedId] = useState("tt0944947");
+  const [selectedId, setSelectedId] = useState("");
   /* const [watched, setWatched] = useState([]); */
   const [watched, setWatched] = useState(function () {
     let store = localStorage.getItem("watched");
@@ -220,6 +220,23 @@ function Logo() {
 }
 
 function SearchBar({ query, setQuery }) {
+  /* useEffect(function () {
+    const el = document.querySelector(".search");
+    console.log(el);
+    el.focus();
+  }, []); */
+  const inputEl = useRef(null);
+
+  useEffect(function () {
+    function callback(e) {
+      if (document.activeElement === inputEl.current) return;
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+        setQuery("");
+      }
+    }
+    document.addEventListener("keydown", callback);
+  }, []);
   return (
     <input
       className="search"
@@ -227,6 +244,7 @@ function SearchBar({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }

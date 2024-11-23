@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
 import { useMovies } from "./useMovie";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 const tempMovieData = [
   {
@@ -48,6 +49,7 @@ const tempWatchedData = [
     userRating: 9,
   },
 ];
+const key = "59ec7bc1";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -55,13 +57,15 @@ const average = (arr) =>
 export default function Index() {
   const [query, setQuery] = useState("game");
   const [selectedId, setSelectedId] = useState("");
+  const [watched, setWatched] = useLocalStorageState([], "watched");
   const { movies, isLoading, error } = useMovies(query);
+
   /* const [watched, setWatched] = useState([]); */
 
-  const [watched, setWatched] = useState(function () {
+  /*  const [watched, setWatched] = useState(function () {
     let store = localStorage.getItem("watched");
     return JSON.parse(store);
-  });
+  }); */
 
   function AddWatchedMovie(WatchedMove) {
     console.log(WatchedMove);
@@ -79,12 +83,7 @@ export default function Index() {
   function handleDelete(id) {
     setWatched((movie) => watched.filter((movie) => movie.imdbID !== id));
   }
-  useEffect(
-    function () {
-      localStorage.setItem("watched", JSON.stringify(watched));
-    },
-    [watched]
-  );
+
   useEffect(function () {
     document.addEventListener("keydown", function (e) {
       if (e.code === "Escape") {

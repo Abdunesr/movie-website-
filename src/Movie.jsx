@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Star from "./Star";
 import { useMovies } from "./useMovie";
 import { useLocalStorageState } from "./useLocalStorageState";
+import { useKey } from "./useKey";
 
 const tempMovieData = [
   {
@@ -84,14 +85,16 @@ export default function Index() {
     setWatched((movie) => watched.filter((movie) => movie.imdbID !== id));
   }
 
-  useEffect(function () {
+  useKey("Escape", handleOncloseMovie);
+
+  /*  useEffect(function () {
     document.addEventListener("keydown", function (e) {
       if (e.code === "Escape") {
         handleOncloseMovie();
         console.log("closing the movie screen");
       }
     });
-  });
+  }); */
 
   return (
     <>
@@ -180,16 +183,12 @@ function SearchBar({ query, setQuery }) {
   }, []); */
   const inputEl = useRef(null);
 
-  useEffect(function () {
-    function callback(e) {
-      if (document.activeElement === inputEl.current) return;
-      if (e.code === "Enter") {
-        inputEl.current.focus();
-        setQuery("");
-      }
-    }
-    document.addEventListener("keydown", callback);
-  }, []);
+  useKey("Enter", function () {
+    if (document.activeElement === inputEl.current) return;
+    inputEl.current.focus();
+    setQuery("");
+  });
+
   return (
     <input
       className="search"
